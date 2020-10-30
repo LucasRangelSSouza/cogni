@@ -1,21 +1,34 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { createStackNavigator } from 'react-navigation-stack';
+import {createAppContainer } from 'react-navigation';
+import LoginPage from './source/pages/LoginPage'
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+const AppNavigator = createStackNavigator({
+
+  
+  'Login':{
+    screen: LoginPage
+  }
+
+
+} , {
+
+    defaultNavigationOptions: {
+      title: 'COGNI',
+      headerTintColor: '#252323',
+      headerStyle:{
+        backgroundColor: '#F5F1ED',
+        borderBottomColor: 'F5F1ED'
+      },
+      headerTitleStyle:{
+        fontSize: 25,
+        color: '#252323',
+        flexGrow: 1,
+        textAlign: 'center',
+        fontWeight: 'bold'
+      }
+    }
+  });
+const AppContainer = createAppContainer(AppNavigator);
+
+export default AppContainer;
