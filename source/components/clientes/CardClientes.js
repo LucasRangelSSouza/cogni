@@ -20,8 +20,6 @@ const CardClientes = (props)=>{
                 
                 <Text style={estilo.subtitulo}>Razão Social:</Text>
                 <Text style={estilo.dados}>{razao}</Text>
-                <Text style={estilo.subtitulo}>Responsavel:</Text>
-                <Text style={estilo.dados}>{responsavel}</Text>
             
             </View>         
            <View style={estilo.containerDeBotoes}>

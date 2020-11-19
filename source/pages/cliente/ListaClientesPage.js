@@ -2,6 +2,7 @@ import React from 'react';
 import {FlatList, SafeAreaView, StyleSheet, Text, View, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native';
 import CardClientes from '../../components/clientes/CardClientes'
 import Database from '../../components/DB'
+import AddSvg from "../../utils/SVG/AddSvg"
 
 
 
@@ -14,16 +15,30 @@ export default class ListaClientesPage extends React.Component {
 
     this.state = {
       clientes: [],
+      clientsToShow:[],
       estado: 'Carregando', //'Carregado'
       tipoUsuario: this.props.navigation.state.params.tipoUsuario,
-      idEmpresaCliente: this.props.navigation.state.params.idEmpresaCliente
+      idEmpresaCliente: this.props.navigation.state.params.idEmpresaCliente,
+      search: ''
     }
 
   };
 
+  onHandleChange(campo, content){
+    this.setState({
+      [campo]: content
+    });
+    this.setState({ clientsToShow: this.state.clientes.filter(cliente=>cliente.NOME_FANTASIA.indexOf(this.state.search)!=-1)});
+  }
 
   componentDidMount() {
     this.findClients();
+  }
+
+  componentDidUpdate() {
+    if(this.state.search!==''){
+      this.setState({ clientsToShow: this.state.clientes});
+    }
   }
 
 
@@ -42,7 +57,7 @@ export default class ListaClientesPage extends React.Component {
         res = await connection.execute(query,[idEmpresaCliente]).catch((err) => {console.log(err);});
       });
     
-      this.setState({ estado: "Carregado", clientes: res.rows });
+      this.setState({ estado: "Carregado", clientes: res.rows,clientsToShow: res.rows});
 
 
     }
@@ -53,9 +68,8 @@ export default class ListaClientesPage extends React.Component {
       await db.transaction(async connection => {
         res = await connection.execute(query, [idEmpresaCliente, idEmpresaCliente]).catch((err) => { console.log(err); });
       });
-      console.log('Res em transation cliente', res);
-      this.setState({ estado: "Carregado", clientes: res.rows });
-      console.log(this.state.clientes);
+      this.setState({ estado: "Carregado", clientes: res.rows, clientsToShow:res.rows});
+
     }
 
   }
@@ -65,7 +79,7 @@ export default class ListaClientesPage extends React.Component {
   renderViews() {
     if (this.state.estado == 'Carregando') {
       return (
-        <View style={estilo.indicadorDeAtividades} >
+        <View style={estilo.loading} >
           <ActivityIndicator size='large' color='#3F19C9' />
           <Text style={estilo.aguarde}>Aguarde...</Text>
         </View>);
@@ -74,9 +88,17 @@ export default class ListaClientesPage extends React.Component {
     if (this.state.estado == 'Carregado') {
       return (
         <View style={estilo.container}>
-          
+          <View style={estilo.searchArea}>
+            <TextInput
+            value={this.state.search}
+            placeholder='Pesquise um cliente'
+            style={estilo.textEntry}
+            placeholderTextColor='#857f7f'
+            onChangeText={(texto) => this.onHandleChange('search', texto)}
+            />
+          </View>
           <FlatList
-            data ={this.state.clientes.sort((a,b)=> a.NOME_FANTASIA.localeCompare(b.NOME_FANTASIA))}
+            data ={this.state.clientsToShow.sort((a,b)=> a.NOME_FANTASIA.localeCompare(b.NOME_FANTASIA))}
             renderItem={({item})=>(
               <CardClientes 
                 cliente={item}
@@ -84,10 +106,10 @@ export default class ListaClientesPage extends React.Component {
             )}
             keyExtractor={item=>item.ID_CLIENTE}
           />
-          <TouchableOpacity  
-            style={estilo.addButton}
-            activeOpacity={0.7}
-          />
+          <TouchableOpacity style={estilo.addButton} activeOpacity={0.7} onPress={()=>{this.onClickAdd()}}>
+              <AddSvg/>
+          </TouchableOpacity>
+            
         </View>
       );
     }
@@ -96,9 +118,9 @@ export default class ListaClientesPage extends React.Component {
 
   render() {
     return (
-        <View style={estilo.container}>
+        <SafeAreaView style={estilo.container}>
           {this.renderViews()}
-        </View>
+        </SafeAreaView>
     );
   }
 
@@ -111,37 +133,6 @@ const estilo = StyleSheet.create({
     justifyContent: 'flex-start',
     flex: 1,
   },
-  cliente: {
-    marginTop: 5,
-    marginLeft: 15,
-    marginRight: 15,
-    paddingRight: 5,
-    paddingLeft: 5,
-    paddingTop: 5,
-    paddingBottom: 5,
-    backgroundColor: '#e3e1e1',
-    color: '#252323',
-    borderRadius: 5,
-    flexDirection: 'column'
-
-  },
-  nomeCliente: {
-    flex: 1,
-    textAlign: 'center'
-  },
-  rowOptions: {
-    flexDirection: 'row'
-
-  },
-  info: {
-    flex: 1
-
-  },
-  produtos: {
-    flex: 1
-
-  },
-
   addButton: {
     position: 'absolute',
     width: 50,
@@ -152,9 +143,20 @@ const estilo = StyleSheet.create({
     bottom: 30,
     backgroundColor:'#3F19C9',
     borderRadius:25,
+  },
 
-
+  loading:{
+    display: 'flex',
+    justifyContent: 'center',
+    flex: 1,
+  },
+  searchArea:{
+    flexDirection: "column"
+  },
+  textEntry:{
+    borderRadius: 10
   }
+
 
 });
 
