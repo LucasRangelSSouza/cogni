@@ -1,0 +1,11 @@
+{
+"imagens":"DELETE FROM imagens",
+"segmentos":"DELETE FROM segmentos ",
+"enderecos":"DELETE FROM enderecos ",
+"pessoas":"DELETE FROM pessoas ",
+"empresas":"DELETE FROM empresas ",
+"clientes":"DELETE FROM clientes ",
+"perfil":"DELETE FROM perfil ",
+"permissoes":"DELETE FROM permissoes",
+"usuarios":"DELETE FROM usuarios ",
+}

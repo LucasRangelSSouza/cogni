@@ -17,7 +17,7 @@ const ViewRow = (props)=>{
 const Estilos = StyleSheet.create({
     
     container:{
-       
+    
 
     },
     

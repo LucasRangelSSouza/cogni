@@ -1,0 +1,11 @@
+{
+"imagens":"INSERT INTO imagens (patch,habilitado) VALUES('C:\LogoEmpresa.jpg',true),('C:\AvatarPessoa.jpg',true),('C:\LogoDell.jpg',true);",
+"segmentos":"INSERT INTO segmentos (nome,cnae,habilitado) VALUES ('SEEGMENTO PADRÃO','0',true);",
+"enderecos":"INSERT INTO enderecos (logadouro,numero,complemento,cep,bairro,cidade,uf,pais,habilitado) VALUES ('R. Armogaste José da Silveira','612','Predio IST','74560550','Centro Oeste','Goiânia','GO','Brasil',true) ('AV INDUSTRIAL BELGRAF','400','***','92.990-000','Industrial','Eldorado do Sul','RS','Brasil',true);",
+"pessoas":"INSERT INTO pessoas (nome,endereco,email,telefone,foto_perfil,habilitado) VALUES ('PESSOA',1,'exemplo@exemplo.com','62986430239',2,true);",
+"empresas":"INSERT INTO empresas (pai,logomarca,razao_social,nome_fantasia,cnpj,ie,im,telefone,responsavel,endereco,segmento,habilitado) VALUES (NULL,1,'SERVICO NACIONAL DE APRENDIZAGEM INDUSTIAL SENAI','INSTITUTO SENAI DE TECNOLOGIA EM AUTOMAÇÃO','03783850001840','ISENTO','ISENTO','32264509',1,1,1,true),(1,1,'FILIAL DO SENAI','INSTITUTO SENAI DE TECNOLOGIA EM AUTOMAÇÃO (FILIAL)','03783850001840','ISENTO','ISENTO','32264509',1,1,1,true);",
+"clientes":"INSERT INTO clientes (pai,logomarca,razao_social,nome_fantasia,cnpj,ie,im,telefone,responsavel,endereco,segmento,habilitado) VALUES (NULL,3,'DELL COMPUTADORES DO BRASIL LTDA','DELL BRASIL (FILIAL)','72381189000110','0000','0000','(51) 3274-5500',1,2,1,true)(1,3,'FILIAL DA DELL BRASIL LTDA','DELL BRASIL','72381189000110','0000','0000','(62) 3274-5500',1,2,1,true);",
+"perfil":"INSERT INTO perfil (nome,habilitado) VALUES('Administrador Cogni',true),('Administrador Cliente',true);",
+"permissoes":"INSERT INTO permissoes (perfil,permissao,habilitado) VALUES(1,'Visualiza Todos Clientes',true),(2,'Visualiza Todos Clientes',false);",
+"usuarios":"INSERT INTO usuarios (pessoa,usuario,senha,perfil,habilitado) VALUES(1,'admin','admin',1,true);"
+}

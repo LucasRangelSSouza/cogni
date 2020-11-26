@@ -1,0 +1,2 @@
+expo install expo-sqlite
+yarn add md5
