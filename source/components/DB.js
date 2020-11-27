@@ -4,7 +4,7 @@ import React from 'react';
 export default class DB extends React.Component {
   constructor(props) {
     super(props);
-    this.databaseName = "cogniDB";
+    this.databaseName = "cogniDBS";
   }
   async initDatabase() {
     //Esta funçao verifica o banco e cria toda a estrutura do banco

@@ -79,7 +79,6 @@
     "enableFk":"PRAGMA foreign_keys = on;",
     "checkTableExists":"SELECT count(name) as count FROM sqlite_master WHERE type='table' AND name like ?",
     "checkUser":"SELECT  COUNT(USUARIOS.ID) as userExist, case PESSOAS_DE_EMPRESAS.EMPRESA_ID when NULL then 'CLIENTE' else 'EMPRESA' end tipo, case PESSOAS_DE_EMPRESAS.EMPRESA_ID when NULL then PESSOAS_DE_CLIENTES.CLIENTE_ID else PESSOAS_DE_EMPRESAS.EMPRESA_ID end idEmpresaCliente, PERFIS_DE_USUARIOS.PERFIL_ID as perfilId FROM USUARIOS LEFT JOIN PESSOAS_DE_CLIENTES USING(PESSOA_ID) LEFT JOIN PESSOAS_DE_EMPRESAS USING(PESSOA_ID) LEFT JOIN PERFIS_DE_USUARIOS USING(ID) WHERE USUARIOS.USUARIO LIKE ? AND USUARIOS.SENHA LIKE ? ",
-    
-    "querySelectTodosClientesDeUmaEmpresa":"select * from clientes where empresa = ?;",
+    "selectTodosClientesDeUmaEmpresa":"SELECT CLIENTES.ID AS idCliente, CLIENTES.NOME_FANTASIA AS nomeFantasia, CLIENTES.RAZAO_SOCIAL AS razaoSocial, PESSOAS.NOME as  responsavel FROM CLIENTES INNER JOIN CLIENTES_DE_EMPRESAS ON CLIENTES.ID = CLIENTES_DE_EMPRESAS.CLIENTE_ID INNER JOIN EMPRESAS ON CLIENTES_DE_EMPRESAS.EMPRESA_ID = EMPRESAS.ID INNER JOIN PESSOAS ON PESSOAS.ID = CLIENTES.RESPONSAVEL WHERE EMPRESAS.ID = ? OR EMPRESAS.PAI = ?;",
     "querySelectClienteFiliais":"select * from clientes where id_cliente = ? or pai = ?;"
 }

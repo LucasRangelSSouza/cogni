@@ -19,6 +19,7 @@ export default class ListaClientesPage extends React.Component {
       estado: 'Carregando', //'Carregado'
       tipoUsuario: this.props.navigation.state.params.tipoUsuario,
       idEmpresaCliente: this.props.navigation.state.params.idEmpresaCliente,
+      perfilUsuario: this.props.navigation.state.params.userPerfil,
       search: ''
     }
 
@@ -49,12 +50,12 @@ export default class ListaClientesPage extends React.Component {
     
     idEmpresaCliente = this.state.idEmpresaCliente;
 
-    if (this.state.tipoUsuario == 'empresarial') {
+    if (this.state.tipoUsuario == 'EMPRESA') {
 
-      query = require('../../utils/initDatabaseSQL.json').querySelectTodosClientesDeUmaEmpresa;
+      query = require('../../utils/initDatabaseSQL.json').selectTodosClientesDeUmaEmpresa;
 
       await db.transaction(async connection => {
-        res = await connection.execute(query,[idEmpresaCliente]).catch((err) => {console.log(err);});
+        res = await connection.execute(query,[idEmpresaCliente,idEmpresaCliente]).catch((err) => {console.log(err);});
       });
     
       this.setState({ estado: "Carregado", clientes: res.rows,clientsToShow: res.rows});
@@ -62,7 +63,7 @@ export default class ListaClientesPage extends React.Component {
 
     }
   
-    if (this.state.tipoUsuario == 'cliente') {
+    if (this.state.tipoUsuario == 'CLIENTE') {
       query = require('../../utils/initDatabaseSQL.json').querySelectClienteFiliais;
 
       await db.transaction(async connection => {

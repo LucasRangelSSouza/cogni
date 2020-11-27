@@ -16,15 +16,15 @@ export default class LoginPage extends React.Component {
       autenticacao: 'Nao-Realizada', // 'Rejeitada' // 'Autorizada' //'Erro' // 'Processando'
       tipoUsuario: null,
       idEmpresaCliente: null,
-      email: 'admin',
-      senha: 'desenvolvedor'
+      userPerfil: null,
+      email: 'tec-empresa@example.com',
+      senha: 'tecnico'
     }
 
   };
   async bancoDeDados() {
     var BancoDeDados = new Database();
     await BancoDeDados.initDatabase();
-    //await BancoDeDados.insetData();
     this.database = BancoDeDados.getDB();
   }
 
@@ -38,7 +38,7 @@ export default class LoginPage extends React.Component {
   componentDidUpdate() {
     if (this.state.autenticacao == 'Autorizada') {
       //Navega para a pagina que lista as empresas
-      this.props.navigation.navigate('ListaClientesPage', { "tipoUsuario": this.state.tipoUsuario, "idEmpresaCliente": this.state.idEmpresaCliente })
+      this.props.navigation.navigate('ListaClientesPage', { "tipoUsuario": this.state.tipoUsuario, "idEmpresaCliente": this.state.idEmpresaCliente, "userPerfil": this.state.userPerfil })
     }
   }
 
@@ -51,14 +51,21 @@ export default class LoginPage extends React.Component {
     const email = this.state.email;
     const passwdEncrypted = md5(this.state.senha);
 
-    query = require('../utils/initDatabaseSQL.json').checkUserQuery;
+    query = require('../utils/initDatabaseSQL.json').checkUser;
 
     await db.transaction(async connection => {
       res = await connection.execute(query, [email, passwdEncrypted]).catch((err) => { console.log(err); });
     });
-    if (res.rows[0].userExists > 0) {
-
-      this.setState({ autenticacao: "Autorizada", tipoUsuario: res.rows[0].tipo, idEmpresaCliente: res.rows[0].idEmpresaCliente });
+    console.log('User ', res);
+    console.log('UserExists ', res.rows[0].userExist);
+    console.log('UserExists ', res.rows[0].tipo);
+    console.log('UserExists ', res.rows[0].idEmpresaCliente);
+    console.log('UserExists ', res.row[0].perfilId);
+    if (res.rows[0].userExist > 0) {
+      this.setState({ autenticacao: "Autorizada",
+                       tipoUsuario: res.rows[0].tipo, 
+                       idEmpresaCliente: res.rows[0].idEmpresaCliente, 
+                       userPerfil: res.row[0].perfilId });
 
     } else {
       this.setState({ autenticacao: "Rejeitada" });
