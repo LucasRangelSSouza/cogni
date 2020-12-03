@@ -2,6 +2,8 @@ import { createStackNavigator } from 'react-navigation-stack';
 import {createAppContainer } from 'react-navigation';
 import LoginPage from './source/pages/LoginPage';
 import ListaClientesPage from './source/pages/cliente/ListaClientesPage';
+import CadastrarClientesPage from './source/pages/cliente/CadastrarClientesPage.js';
+import InfoClientesPage from './source/pages/cliente/InfoClientesPage.js';
 import {Text} from 'react-native';
 
 const AppNavigator = createStackNavigator({
@@ -23,6 +25,29 @@ const AppNavigator = createStackNavigator({
       }
     },
 
+    'CadastrarClientesPage':{
+      screen: CadastrarClientesPage,
+      navigationOptions:{
+        title: "Cadastrar cliente",
+          headerTitleStyle:{ 
+            fontSize: 25,
+            color: '#252323',
+            fontWeight: 'bold',
+          },     
+        }
+      },
+
+      'InfoClientesPage':{
+        screen: InfoClientesPage,
+        navigationOptions:{
+          title: navigation.state.params.nomeFantasia,
+            headerTitleStyle:{ 
+              fontSize: 25,
+              color: '#252323',
+              fontWeight: 'bold',
+            },     
+          }
+        }
 
 } , {
 

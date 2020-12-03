@@ -2,14 +2,14 @@ import React from 'react';
 import {View, Text, StyleSheet} from 'react-native'
 import InfoSvg from "../../utils/SVG/InfoSvg"
 import ProdutosSvg from "../../utils/SVG/ProdutosSvg"
+import InfoClientesPage from '../../pages/cliente/InfoClientesPage';
 
 
 const CardClientes = (props)=>{
-    
-    var cliente = props.cliente.NOME_FANTASIA;
-    var razao = props.cliente.RAZAO_SOCIAL;
-    var responsavel = props.cliente.RESPONSAVEL;
-    
+    ''
+    var cliente = props.cliente.nomeFantasia;
+    var razao = props.cliente.razaoSocial;
+    var onPress = props.onPress;
     return(
         <View style={estilo.container}>
            <View>
@@ -25,11 +25,15 @@ const CardClientes = (props)=>{
            <View style={estilo.containerDeBotoes}>
 
                 <View style={estilo.botaoInformacoes}>
-                    <InfoSvg/>
+                    <TouchableOpacity delayPressIn={0} onPress={() => onPress.navigate('InfoClientesPage', { "nomeFantasia": cliente})}>
+                        <InfoSvg/>
+                    </TouchableOpacity>
                 </View>
 
                 <View style={estilo.botaoProdutos}>
-                    <ProdutosSvg/>
+                    <TouchableOpacity delayPressIn={0} onPress={() => onPress.navigate('InfoClientesPage', { "nomeFantasia": cliente})}>
+                        <ProdutosSvg/>
+                    </TouchableOpacity>
                 </View>
 
             </View>

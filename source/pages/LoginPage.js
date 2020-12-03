@@ -4,7 +4,6 @@ import ViewRow from '../components/ViewRow'
 import Logo from '../utils/SVG/LogoCogniSvg'
 import Database from '../components/DB'
 import md5 from 'md5';
-import { or } from 'react-native-reanimated';
 
 
 
@@ -37,6 +36,7 @@ export default class LoginPage extends React.Component {
 
   componentDidUpdate() {
     if (this.state.autenticacao == 'Autorizada') {
+      this.setState({ autenticacao: 'Nao-Realizada' });
       //Navega para a pagina que lista as empresas
       this.props.navigation.navigate('ListaClientesPage', { "tipoUsuario": this.state.tipoUsuario, "idEmpresaCliente": this.state.idEmpresaCliente, "userPerfil": this.state.userPerfil })
     }
@@ -53,21 +53,26 @@ export default class LoginPage extends React.Component {
 
     query = require('../utils/initDatabaseSQL.json').checkUser;
 
+    console.log('Query ', query);
+    console.log('Parametros [',email, passwdEncrypted,']');
+
     await db.transaction(async connection => {
       res = await connection.execute(query, [email, passwdEncrypted]).catch((err) => { console.log(err); });
     });
-    console.log('User ', res);
-    console.log('UserExists ', res.rows[0].userExist);
-    console.log('UserExists ', res.rows[0].tipo);
-    console.log('UserExists ', res.rows[0].idEmpresaCliente);
-    console.log('UserExists ', res.row[0].perfilId);
-    if (res.rows[0].userExist > 0) {
-      this.setState({ autenticacao: "Autorizada",
-                       tipoUsuario: res.rows[0].tipo, 
-                       idEmpresaCliente: res.rows[0].idEmpresaCliente, 
-                       userPerfil: res.row[0].perfilId });
+    var usuario = res.rows[0]
 
-    } else {
+    if (usuario.userExists > 0) {
+      if( typeof usuario.idCliente  === 'undefined' || usuario.idCliente === null){
+        this.setState({ tipoUsuario: 'EMPRESA', 
+        idEmpresaCliente: usuario.idEmpresa});
+      }else{
+        this.setState({ tipoUsuario: 'CLIENTE', 
+        idEmpresaCliente: usuario.idCliente});
+      }
+      console.log('TIPO USUARIO',this.state.tipoUsuario);
+      this.setState({ autenticacao: "Autorizada",
+                       userPerfil: usuario.idPerfil });
+      } else {
       this.setState({ autenticacao: "Rejeitada" });
     }
 
