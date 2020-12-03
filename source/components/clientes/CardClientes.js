@@ -1,37 +1,40 @@
 import React from 'react';
-import {View, Text, StyleSheet} from 'react-native'
+import {View, Text, StyleSheet,TouchableOpacity} from 'react-native'
 import InfoSvg from "../../utils/SVG/InfoSvg"
 import ProdutosSvg from "../../utils/SVG/ProdutosSvg"
-import InfoClientesPage from '../../pages/cliente/InfoClientesPage';
+import AtivosSvg from "../../utils/SVG/AtivosSvg"
 
 
 const CardClientes = (props)=>{
-    ''
     var cliente = props.cliente.nomeFantasia;
     var razao = props.cliente.razaoSocial;
+    var idCliente =  props.cliente.idCliente;
+    var perfilUsuario = props.cliente.perfilUsuario;
     var onPress = props.onPress;
+    console.log('Id clienteeeeeeeeeeeee: ',idCliente);
     return(
         <View style={estilo.container}>
            <View>
-                {/* <Label titulo={cliente}/> */}
-                <View style={estilo.containerNomeCliente} >
+                <View style={estilo.containerDadosCliente} >
                     <Text style={estilo.nomeCliente}>{cliente}</Text> 
+                    <Text style={estilo.dadosCliente}>{razao}</Text>
                 </View>
-                
-                <Text style={estilo.subtitulo}>Razão Social:</Text>
-                <Text style={estilo.dados}>{razao}</Text>
             
             </View>         
            <View style={estilo.containerDeBotoes}>
 
                 <View style={estilo.botaoInformacoes}>
-                    <TouchableOpacity delayPressIn={0} onPress={() => onPress.navigate('InfoClientesPage', { "nomeFantasia": cliente})}>
+                    <TouchableOpacity delayPressIn={0} onPress={() => onPress.navigate('InfoClientesPage', { "nomeFantasia": cliente, "idCliente": idCliente, 'perfilUsuario':perfilUsuario})}>
                         <InfoSvg/>
                     </TouchableOpacity>
                 </View>
-
+                <View style={estilo.botaoAtivos}>
+                    <TouchableOpacity delayPressIn={0} onPress={() => onPress.navigate('InfoClientesPage', { "nomeFantasia": cliente, "idCliente": idCliente, 'perfilUsuario':perfilUsuario})}>
+                        <AtivosSvg/>
+                    </TouchableOpacity>
+                </View>
                 <View style={estilo.botaoProdutos}>
-                    <TouchableOpacity delayPressIn={0} onPress={() => onPress.navigate('InfoClientesPage', { "nomeFantasia": cliente})}>
+                    <TouchableOpacity delayPressIn={0} onPress={() => onPress.navigate('InfoClientesPage', { "nomeFantasia": cliente, "idCliente": idCliente, 'perfilUsuario':perfilUsuario})}>
                         <ProdutosSvg/>
                     </TouchableOpacity>
                 </View>
@@ -59,11 +62,10 @@ const estilo = StyleSheet.create({
       },
     
     subtitulo:{
-      paddingLeft: 10,
       fontWeight: "bold"
     },
-    dados:{
-        paddingLeft: 15
+    dadosCliente:{
+        alignSelf: 'center',
     },
     containerDeBotoes:{
         marginTop: 5,
@@ -72,14 +74,15 @@ const estilo = StyleSheet.create({
         borderBottomRightRadius: 5,
         backgroundColor: '#d6d6d6',
     },
-    containerNomeCliente:{
-        paddingTop: 5,
-        paddingBottom: 5,
-        paddingLeft: 10
+    containerDadosCliente:{
+        padding:5,
+        flex: 1,
+        alignSelf: 'center',
     },
     nomeCliente:{
         fontWeight: 'bold',
-        fontSize: 15
+        fontSize: 13,
+        alignSelf: 'center'
     },
     botaoInformacoes:{
         flex: 1,
@@ -95,7 +98,16 @@ const estilo = StyleSheet.create({
         paddingBottom: 15,
         borderLeftWidth: 1,
         borderLeftColor: '#dbdbdb'
+    },
+
+    botaoAtivos:{
+        flex: 1,
+        paddingTop: 15,
+        paddingBottom: 15,
+        borderLeftWidth: 1,
+        borderLeftColor: '#dbdbdb'
     }
+    
     
 })
 

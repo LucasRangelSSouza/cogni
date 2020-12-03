@@ -1,5 +1,5 @@
 import React from 'react';
-import {FlatList, SafeAreaView, StyleSheet, Text, View, TextInput, TouchableOpacity, ActivityIndicator,Alert } from 'react-native';
+import { FlatList, SafeAreaView, StyleSheet, Text, View, TextInput, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
 import CardClientes from '../../components/clientes/CardClientes'
 import Database from '../../components/DB'
 import AddSvg from "../../utils/SVG/AddSvg"
@@ -26,7 +26,7 @@ export default class ListaClientesPage extends React.Component {
 
   };
 
-  onHandleChange(campo, content){
+  onHandleChange(campo, content) {
     this.setState({
       [campo]: content
     });
@@ -36,62 +36,62 @@ export default class ListaClientesPage extends React.Component {
     this.findClients();
   }
 
-  componentDidUpdate(){
-    if(this.state.estado == 'goCadastrarClientes'){
+  componentDidUpdate() {
+    if (this.state.estado == 'goCadastrarClientes') {
       this.goCadastrarClientes();
     }
   }
-  async goCadastrarClientes(){
+  async goCadastrarClientes() {
     var BancoDeDados = new Database();
     db = BancoDeDados.getDB();
-    
+
     idPerfil = this.state.perfilUsuario;
     query = require('../../utils/initDatabaseSQL.json').checkPermission;
 
     await db.transaction(async connection => {
-      res = await connection.execute(query,[idPerfil,'CRIAR CLIENTE']).catch((err) => {console.log(err);});
+      res = await connection.execute(query, [idPerfil, 'CRIAR CLIENTE']).catch((err) => { console.log(err); });
     });
 
-    if(res.rows[0].hasPermission=='1'){
-      this.setState({estado:'Carregado'});
+    if (res.rows[0].hasPermission == '1') {
+      this.setState({ estado: 'Carregado' });
       this.props.navigation.navigate('CadastrarClientesPage', { "tipoUsuario": this.state.tipoUsuario, "idEmpresaCliente": this.state.idEmpresaCliente, "userPerfil": this.state.userPerfil })
-    }else{
-      this.setState({estado:'Carregado'});
+    } else {
+      this.setState({ estado: 'Carregado' });
       Alert.alert(
         "Permissão negada",
         "O seu usuario não tem permissão para cadastrar um cliente, por favor contate um administrador",
         [
-          { text: "OK"}
+          { text: "OK" }
         ],
         { cancelable: true }
       );
     }
-    
+
   }
 
-  onClickAdd(){
-    this.setState({estado:'goCadastrarClientes'});
+  onClickAdd() {
+    this.setState({ estado: 'goCadastrarClientes' });
   }
-  
-  searchFilterFunction = text => {    
-    const newData = this.arrayholder.filter(item => {      
+
+  searchFilterFunction = text => {
+    const newData = this.arrayholder.filter(item => {
       const itemData = `${item.nomeFantasia.toUpperCase()}   
       ${item.nomeFantasia.toUpperCase()} ${item.nomeFantasia.toUpperCase()}`;
-      
-       const textData = text.toUpperCase();
-        
-       return itemData.indexOf(textData) > -1;    
+
+      const textData = text.toUpperCase();
+
+      return itemData.indexOf(textData) > -1;
     });
-    
-    this.setState({ clientes: newData });  
+
+    this.setState({ clientes: newData });
   };
 
 
-  async findClients(){
-    
+  async findClients() {
+
     var BancoDeDados = new Database();
     db = BancoDeDados.getDB();
-    
+
     idEmpresaCliente = this.state.idEmpresaCliente;
 
     if (this.state.tipoUsuario == 'EMPRESA') {
@@ -99,10 +99,10 @@ export default class ListaClientesPage extends React.Component {
       query = require('../../utils/initDatabaseSQL.json').selectTodosClientesDeUmaEmpresa;
 
       await db.transaction(async connection => {
-        res = await connection.execute(query,[idEmpresaCliente,idEmpresaCliente]).catch((err) => {console.log(err);});
+        res = await connection.execute(query, [idEmpresaCliente, idEmpresaCliente]).catch((err) => { console.log(err); });
       });
     }
-  
+
     if (this.state.tipoUsuario == 'CLIENTE') {
       query = require('../../utils/initDatabaseSQL.json').querySelectClienteFiliais;
 
@@ -111,7 +111,7 @@ export default class ListaClientesPage extends React.Component {
       });
     }
     this.arrayholder = res.rows;
-    this.setState({ estado: "Carregado", clientes: res.rows});
+    this.setState({ estado: "Carregado", clientes: res.rows });
 
   }
 
@@ -129,24 +129,27 @@ export default class ListaClientesPage extends React.Component {
       return (
         <View style={estilo.container}>
           <View style={estilo.searchArea}>
-          <TextInput style={estilo.textEntry}        
-            placeholder="Digite o nome fantasia do cliente."
-            onChangeText={text => this.searchFilterFunction(text)}         
-          /> 
+            <TextInput style={estilo.textEntry}
+              placeholder="Digite o nome fantasia do cliente."
+              onChangeText={text => this.searchFilterFunction(text)}
+            />
           </View>
           <FlatList
-            data ={this.state.clientes.sort((a,b)=> a.nomeFantasia.localeCompare(b.nomeFantasia))}//this.state.clientes.sort((a,b)=> a.nomeFantasia.localeCompare(b.nomeFantasia))
-            renderItem={({item})=>(
-              <CardClientes 
+            data={this.state.clientes.sort((a, b) => a.nomeFantasia.localeCompare(b.nomeFantasia))}//this.state.clientes.sort((a,b)=> a.nomeFantasia.localeCompare(b.nomeFantasia))
+            renderItem={({ item }) => (
+              <CardClientes
                 cliente={item}
-                onPress={this.props.navigation}/>
+                onPress={this.props.navigation}
+                perfilUsuario={this.state.perfilUsuario} />
             )}
-            keyExtractor={item=> md5(item.idCliente)}
+            keyExtractor={item => md5(item.idCliente)}
           />
-          <TouchableOpacity style={estilo.addButton} activeOpacity={0.7} onPress={()=>{this.onClickAdd()}}>
+          <View style={estilo.addButton}>
+            <TouchableOpacity delayPressIn={0} onPress={()=>{ this.onClickAdd()}}>
               <AddSvg/>
-          </TouchableOpacity>
-            
+            </TouchableOpacity>
+          </View>
+
         </View>
       );
     }
@@ -155,9 +158,9 @@ export default class ListaClientesPage extends React.Component {
 
   render() {
     return (
-        <SafeAreaView style={estilo.container}>
-          {this.renderViews()}
-        </SafeAreaView>
+      <SafeAreaView style={estilo.container}>
+        {this.renderViews()}
+      </SafeAreaView>
     );
   }
 
@@ -168,7 +171,7 @@ const estilo = StyleSheet.create({
     backgroundColor: '#F5F1ED',
     display: 'flex',
     justifyContent: 'flex-start',
-    flex: 1,
+    flex: 1
   },
   addButton: {
     position: 'absolute',
@@ -178,19 +181,19 @@ const estilo = StyleSheet.create({
     justifyContent: 'center',
     right: 15,
     bottom: 30,
-    backgroundColor:'#3F19C9',
-    borderRadius:25,
+    backgroundColor: '#3F19C9',
+    borderRadius: 25
   },
 
-  loading:{
+  loading: {
     display: 'flex',
     justifyContent: 'center',
     flex: 1
   },
-  searchArea:{
+  searchArea: {
     flexDirection: "column"
   },
-  textEntry:{
+  textEntry: {
     borderRadius: 5,
     paddingLeft: 10,
     paddingRight: 10,
